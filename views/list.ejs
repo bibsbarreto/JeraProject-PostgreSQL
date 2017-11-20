@@ -16,7 +16,6 @@
 				<th>Nome</th>
 				<th>Autor</th>
 				<th>Número de páginas</th>
-				<th>Lista</th>
 				<th>Ações</th>
 			</thead>
 			<tbody class="books" style="background-color: #7a7a7a; color: white;">
@@ -25,13 +24,6 @@
 					<td><%= books[i].name %></td>
 					<td><%= books[i].author %></td>
 					<td><%= books[i].pages_number %></td>
-					<td>
-						<% if(books[i].list == false) {%>
-							<a style="color: #009cdf" href="add_to_list?id=<%= books[i].id %>">Adicionar</a>
-						<% } else { %>
-							<a style="color: #009cdf" href="remove_from_list?id=<%= books[i].id %>">Remover</a>
-						<% } %>
-					</td>
 					<td>
 						<a style="color: #009cdf" href="update?action=alt&id=<%= books[i].id %>">Atualizar</a>
 						<a style="color: #009cdf" href="delete?action=del&id=<%= books[i].id %>">Deletar</a>

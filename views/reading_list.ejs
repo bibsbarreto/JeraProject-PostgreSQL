@@ -9,7 +9,7 @@
 </head>
 <body>
 	<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Lista de leitura</h1>
-	<% if(books.length > 0){ %>
+	<% if(reminders.length > 0) { %>
 	<table style="width: 70%; margin: auto; box-shadow: 0px 0px 10px black;">
 			<thead style="background-color: #009cdf; color: white;">
                 <th>Nome</th>
@@ -29,9 +29,13 @@
 	<%} else {%>
 			<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Não há livros para ler!</h1>
 	<% } %>
-
-	<p style="text-align:center">
-	<a href="http://localhost:3000/registry"><button>Cadastro de livros</button></a></p>
+    
+    <% if(books.length > 0) { %>
+        <p style="text-align:center">
+        <a href="http://localhost:3000/reminder_registry"><button>Cadastro de lembretes</button></a></p>
+    <%} else {%>
+		<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Cadastre um livro primeiro!</h1>
+	<% } %>
     <p style="text-align:center">
     <a href="http://localhost:3000/list"><button>Lista de livros</button></a></p>
     <p style="text-align:center">
