@@ -9,7 +9,7 @@ var url = require('url');
 //extrair dados do 'form'
 app.use(bodyParser.urlencoded({extended: true}))
 
-var conString = "postgres://postgres:1234@localhost:5432/booksdb";
+var conString = "postgres://postgres:1234@localhost:5432/linksdb";
 
 var pgClient = new pg.Client(conString);
 pgClient.connect((err, database) => {
@@ -28,70 +28,24 @@ app.get('/registry', (req, res) => {
 	res.sendFile('/Users/bbarr/Documents/Nodejs/JeraProject/Desafio Jera/registry.html')
 })
 
-app.get('/reminder_registry', (req, res) => {
-	var books_names = [];
-	var books = [];
-	
-		   // Get a Postgres client from the connection pool
-		   pg.connect(conString, function(err, client, done) {
-		   // Handle connection errors
-		   if(err) {
-				 done();
-			  console.log(err);
-			  return res.status(500).json({ success: false, data: err});
-			} 
-			
-			// SQL Query > Select Data
-			var query = pgClient.query('SELECT * FROM book ORDER BY id ASC;');
-	
-			// Stream results back one row at a time
-			query.on('row', function(row) {
-				books.push(row);
-			});
-	
-			// After all data is returned, close connection and return results
-			query.on('end', function() {
-				for(var i = 0; i < books.length; i++){
-					books_names.push({id: books[i].id, name: books[i].name});
-				}
-				res.send({books_names: books_names});
-				done();
-			});
-		})
-		res.sendFile('/Users/bbarr/Documents/Nodejs/JeraProject/Desafio Jera/reminder_registry.html')
-})
-
 //Cadastrar livro
 app.post('/registry', (req, res) => {
 	console.log('Entrou no método Post!')
-	
+	console.log(req.body);
 	//colocar dados no banco
-	pgClient.query("INSERT INTO book(name, author, pages_number) values($1, $2, $3)", [req.body.name, req.body.author, req.body.pages_number], (err, result) => {
+	pgClient.query("INSERT INTO study_link(title, link, category) values($1, $2, $3)", [req.body.title, req.body.link, req.body.category], (err, result) => {
 		if(err) return console.log(err);
 		console.log('saved to database');
 	res.redirect('/list');
 	})	
 })
 
-//Cadastrar lembrete
-app.post('/reminder_registry', (req, res) => {
-	console.log('Entrou no método Post!')
-	
-	//colocar dados no banco
-	pgClient.query("INSERT INTO reminder(date, book_id) values($1, $2, $3)", [req.body.date, req.body.book_id], (err, result) => {
-		if(err) return console.log(err);
-		console.log('saved to database');
-	res.redirect('/reading_list');
-	})	
-})
-
 //rendering
 app.set('view engine', 'ejs');
 
-
 //Lista de livros
 app.get('/list', (req, res) => {
-	   var books = [];
+	   var study_links = [];
 
 	   // Get a Postgres client from the connection pool
        pg.connect(conString, function(err, client, done) {
@@ -103,55 +57,20 @@ app.get('/list', (req, res) => {
         } 
         
         // SQL Query > Select Data
-        var query = pgClient.query('SELECT * FROM book ORDER BY id ASC;');
+        var query = pgClient.query('SELECT * FROM study_link ORDER BY id ASC;');
 
         // Stream results back one row at a time
         query.on('row', function(row) {
-            books.push(row);
+            study_links.push(row);
         });
 
         // After all data is returned, close connection and return results
         query.on('end', function() {
 			done();
-            res.render('list.ejs', {books: books});
+            res.render('list.ejs', {study_links: study_links});
         });
 
 	});    
-})
-
-//Lista de lembretes
-app.get('/reading_list', (req, res) => {
-	var books = [];
-	var reminders = [];
-
-	// Get a Postgres client from the connection pool
-	pg.connect(conString, function(err, client, done) {
-	// Handle connection errors
-	if(err) {
-		  done();
-	   console.log(err);
-	   return res.status(500).json({ success: false, data: err});
-	 } 
-	 
-	 // SQL Query > Select Data
-	 var query = pgClient.query('SELECT * FROM book ORDER BY id ASC;');
-
-	 // Stream results back one row at a time
-	 query.on('row', function(row) {
-		books.push(row);
-	 });
-
-	 // After all data is returned, close connection and return results
-	 query.on('end', function() {
-		done();
-		query = pgClient.query('SELECT * FROM reminder ORDER BY id ASC;');
-		query.on('row', function(row) {
-			reminders.push(row);
-		});
-		res.render('reading_list.ejs', {books: books, reminders: reminders});
-	 });
-
- });    
 })
 
 var id = 0;
@@ -159,7 +78,7 @@ var id = 0;
 app.get('/update', (req, res) => {
 	console.log('Entrou no método GET');
 	console.log(req.query.id);
-	var books = [];
+	var study_links = [];
 	id = req.query.id;
 	// Get a Postgres client from the connection pool
        pg.connect(conString, function(err, client, done) {
@@ -171,17 +90,17 @@ app.get('/update', (req, res) => {
         } 
         
         // SQL Query > Select Data
-        var query = pgClient.query('SELECT * FROM book WHERE id=($1);', [id]);
+        var query = pgClient.query('SELECT * FROM study_link WHERE id=($1);', [id]);
 
         // Stream results back one row at a time
         query.on('row', function(row) {
-            books.push(row);
+            study_links.push(row);
         });
 
         // After all data is returned, close connection and return results
         query.on('end', function() {
             done(); 
-            res.render('update.ejs', {books: books});
+            res.render('update.ejs', {study_links: study_links});
         });
 	});
 })
@@ -200,7 +119,7 @@ app.post('/update', (req, res) => {
 	        }
 	        
 	        //colocar dados no banco
-			pgClient.query("UPDATE book SET name=($1), author=($2), pages_number=($3) WHERE id=($4)", [req.body.name, req.body.author, req.body.pages_number, id], (err, result) => {
+			pgClient.query("UPDATE study_link SET name=($1), author=($2), pages_number=($3) WHERE id=($4)", [req.body.name, req.body.author, req.body.pages_number, id], (err, result) => {
 				if(err) return console.log(err)
 				console.log('updated to database')
 				res.redirect('/list');
@@ -215,7 +134,7 @@ id = 0;
 app.get('/delete', (req, res) => {
 	console.log('Entrou no método GET');
 	console.log(req.query.id);
-	var books = [];
+	var study_links = [];
 	id = req.query.id;
 	// Get a Postgres client from the connection pool
        pg.connect(conString, function(err, client, done) {
@@ -227,7 +146,7 @@ app.get('/delete', (req, res) => {
         } 
         
         // SQL Query > Select Data
-        var query = pgClient.query('DELETE FROM book WHERE id=($1);', [id]);
+        var query = pgClient.query('DELETE FROM study_link WHERE id=($1);', [id]);
         res.redirect('/list')
 	});
 })

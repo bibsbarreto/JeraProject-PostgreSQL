@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Cadastro de livros</title>
+	<title>Cadastro de links</title>
 	<style>
 	@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
 	</style> 
@@ -10,12 +10,18 @@
 <body>
 
 	<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">
-		Cadastro de livros
+		Cadastro de links
 	</h1>
 		<form   style="text-align:center" action="/registry" method="POST">
-		<input type="text" placeholder="Nome" name="name" required><br><br>
-		<input type="text" placeholder="Autor" name="author" required><br><br>
-		<input type="number" placeholder="Número de páginas" name="pages_number" required><br><br>
+		<input type="text" placeholder="Título" name="title" required><br><br>
+		<input type="text" placeholder="Link" name="link" required><br><br>
+		Categoria:<br>
+		<select>
+			<option value="selected" selected>Cálculo I</option>
+			<option value="Calculo">Cálculo I</option>
+			<option value="FTC">Fundamentos de Teoria da Computação</option>
+			<option value="AlgProg2">Algoritmos e Programação Orientada a Objetos II</option>
+		</select><br><br>
 		<button type="submit">Cadastrar</button>
 	    </form>
 	<p style="text-align:center">
