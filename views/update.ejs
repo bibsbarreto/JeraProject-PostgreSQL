@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Atualizar livro</title>
+<style>
+@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+</style> 
+</head>
+<body>
+
+	<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">
+		Atualizar livro
+	</h1>
+		<form  class="books" style="text-align:center" action="/update" method="POST">
+		<% for(var i = 0; i < books.length; i++) { %>
+		<input type="text" placeholder="Nome" name="name" value="<%= books[i].name %>" required><br><br>
+		<input type="text" placeholder="Autor" name="author" value="<%= books[i].author %>" required><br><br>
+		<input type="text" placeholder="Número de páginas" name="pages_number" value="<%= books[i].pages_number %>" required><br><br>
+		<button type="submit">Atualizar</button>
+	    <% } %>
+	    </form>
+	<p style="text-align:center">
+	<a href="http://localhost:3000/list"><button>Cancelar</button></a></p>
+
+</body>
+</html>

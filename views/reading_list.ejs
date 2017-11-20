@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Lista de leitura</title>
+	<style>
+		@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+	</style> 
+</head>
+<body>
+	<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Lista de leitura</h1>
+	<% if(books.length > 0){ %>
+	<table style="width: 70%; margin: auto; box-shadow: 0px 0px 10px black;">
+			<thead style="background-color: #009cdf; color: white;">
+                <th>Nome</th>
+                <th>Autor</th>
+                <th>Número de páginas</th>
+			</thead>
+			<tbody class="books" style="background-color: #7a7a7a; color: white;">
+				<% for(var i = 0; i < books.length; i++) { %>
+				<tr class="books">
+                    <td><%= books[i].name %></td>
+                    <td><%= books[i].author %></td>
+                    <td><%= books[i].pages_number %></td>
+				</tr> 
+				<% } %>
+			</tbody>
+	</table>
+	<%} else {%>
+			<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Não há livros para ler!</h1>
+	<% } %>
+
+	<p style="text-align:center">
+	<a href="http://localhost:3000/registry"><button>Cadastro de livros</button></a></p>
+	<p style="text-align:center">
+    <a href="http://localhost:3000/"><button>Página inicial</button></a></p>
+    <p style="text-align:center">
+    <a href="http://localhost:3000/list"><button>Lista de livros</button></a></p>
+</body>
+</html>
