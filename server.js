@@ -71,15 +71,42 @@ app.get('/list', (req, res) => {
 	});    
 })
 
-var idUpdate = 0;
+app.get('/reading_list', (req, res) => {
+	var books = [];
+
+	// Get a Postgres client from the connection pool
+	pg.connect(conString, function(err, client, done) {
+	// Handle connection errors
+	if(err) {
+		  done();
+	   console.log(err);
+	   return res.status(500).json({ success: false, data: err});
+	 } 
+	 
+	 // SQL Query > Select Data
+	 var query = pgClient.query('SELECT * FROM book WHERE list=true ORDER BY id ASC;');
+
+	 // Stream results back one row at a time
+	 query.on('row', function(row) {
+		 books.push(row);
+	 });
+
+	 // After all data is returned, close connection and return results
+	 query.on('end', function() {
+		 done();
+		 res.render('reading_list.ejs', {books: books});
+	 });
+
+ });    
+})
+
+var id = 0;
 
 app.get('/update', (req, res) => {
-	//res.sendFile('/Users/bbarr/Documents/Nodejs/JeraProject/Desafio Jera/views/update.html')
 	console.log('Entrou no método GET');
-	//var result = url.parse(req.url, true);
 	console.log(req.query.id);
 	var books = [];
-	idUpdate = req.query.id;
+	id = req.query.id;
 	// Get a Postgres client from the connection pool
        pg.connect(conString, function(err, client, done) {
        // Handle connection errors
@@ -90,7 +117,7 @@ app.get('/update', (req, res) => {
         } 
         
         // SQL Query > Select Data
-        var query = pgClient.query('SELECT * FROM book WHERE id=($1);', [idUpdate]);
+        var query = pgClient.query('SELECT * FROM book WHERE id=($1);', [id]);
 
         // Stream results back one row at a time
         query.on('row', function(row) {
@@ -118,7 +145,7 @@ app.post('/update', (req, res) => {
 	        }
 	        
 	        //colocar dados no banco
-			pgClient.query("UPDATE book SET name=($1), author=($2), pages_number=($3) WHERE id=($4)", [req.body.name, req.body.author, req.body.pages_number, idUpdate], (err, result) => {
+			pgClient.query("UPDATE book SET name=($1), author=($2), pages_number=($3) WHERE id=($4)", [req.body.name, req.body.author, req.body.pages_number, id], (err, result) => {
 				if(err) return console.log(err)
 				console.log('updated to database')
 				res.redirect('/list');
@@ -127,15 +154,13 @@ app.post('/update', (req, res) => {
 		})
 })
 
-var idDelete = 0;
+id = 0;
 
 app.get('/delete', (req, res) => {
-	//res.sendFile('/Users/bbarr/Documents/Nodejs/JeraProject/Desafio Jera/views/update.html')
 	console.log('Entrou no método GET');
-	//var result = url.parse(req.url, true);
 	console.log(req.query.id);
 	var books = [];
-	idDelete = req.query.id;
+	id = req.query.id;
 	// Get a Postgres client from the connection pool
        pg.connect(conString, function(err, client, done) {
        // Handle connection errors
@@ -146,7 +171,47 @@ app.get('/delete', (req, res) => {
         } 
         
         // SQL Query > Select Data
-        var query = pgClient.query('DELETE FROM book WHERE id=($1);', [idDelete]);
+        var query = pgClient.query('DELETE FROM book WHERE id=($1);', [id]);
         res.redirect('/list')
 	});
-});
+})
+
+app.get('/add_to_list', (req, res) => {
+	console.log('Entrou no método GET');
+	console.log(req.query.id);
+	var books = [];
+	id = req.query.id;
+	// Get a Postgres client from the connection pool
+       pg.connect(conString, function(err, client, done) {
+       // Handle connection errors
+       if(err) {
+       	  done();
+          console.log(err);
+          return res.status(500).json({ success: false, data: err});
+        } 
+        
+        // SQL Query > Select Data
+        var query = pgClient.query("UPDATE book SET list=true WHERE id=($1)", [id]);
+        res.redirect('/list')
+	});
+})
+
+app.get('/remove_from_list', (req, res) => {
+	console.log('Entrou no método GET');
+	console.log(req.query.id);
+	var books = [];
+	id = req.query.id;
+	// Get a Postgres client from the connection pool
+       pg.connect(conString, function(err, client, done) {
+       // Handle connection errors
+       if(err) {
+       	  done();
+          console.log(err);
+          return res.status(500).json({ success: false, data: err});
+        } 
+        
+        // SQL Query > Select Data
+        var query = pgClient.query("UPDATE book SET list=false WHERE id=($1)", [id]);
+        res.redirect('/list')
+	});
+})
