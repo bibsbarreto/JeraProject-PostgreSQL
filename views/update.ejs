@@ -16,12 +16,37 @@
 		<% for(var i = 0; i < study_links.length; i++) { %>
 		<input type="text" placeholder="Título" name="title" value="<%= study_links[i].title %>" required><br><br>
 		<input type="text" placeholder="Link" name="link" value="<%= study_links[i].link %>" required><br><br>
-		<input type="number" placeholder="Categoria" name="category" value="<%= study_links[i].category %>" required><br><br>
+		Categoria:<br>
+		<select id="Ultra" onchange="run()">
+			<option value="selected" selected>Selecione uma matéria</option>
+			<option value="Calculo">Cálculo I</option>
+			<option value="FTC">Fundamentos de Teoria da Computação</option>
+			<option value="AlgProg2">Algoritmos e Programação Orientada a Objetos II</option>
+		</select><br><br>
+		<input type="hidden" id="srt" name="category" placeholder="get value on option select"><br>
 		<button type="submit">Atualizar</button>
 	    <% } %>
 	    </form>
 	<p style="text-align:center">
 	<a href="http://localhost:3000/list"><button>Cancelar</button></a></p>
 
+	<script>
+			function run() {
+			document.getElementById("srt").value = document.getElementById("Ultra").value;
+			}
+	
+			function up() {
+	
+				//if (document.getElementById("srt").value != "") {
+					var dop = document.getElementById("srt").value;
+				//}
+				pop(dop);
+	
+			}
+	
+			function pop(val) {
+				alert(val);
+			}
+		</script>
 </body>
 </html>

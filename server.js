@@ -31,7 +31,6 @@ app.get('/registry', (req, res) => {
 //Cadastrar livro
 app.post('/registry', (req, res) => {
 	console.log('Entrou no método Post!')
-	console.log(req.body);
 	//colocar dados no banco
 	pgClient.query("INSERT INTO study_link(title, link, category) values($1, $2, $3)", [req.body.title, req.body.link, req.body.category], (err, result) => {
 		if(err) return console.log(err);
@@ -73,11 +72,16 @@ app.get('/list', (req, res) => {
 	});    
 })
 
+//Lista de busca
+app.get('/search', (req, res) => {
+	var study_links = [];
+	res.render('search.ejs');
+})
+
 var id = 0;
 //Pegar dados para atualizar livro
 app.get('/update', (req, res) => {
 	console.log('Entrou no método GET');
-	console.log(req.query.id);
 	var study_links = [];
 	id = req.query.id;
 	// Get a Postgres client from the connection pool
@@ -119,7 +123,7 @@ app.post('/update', (req, res) => {
 	        }
 	        
 	        //colocar dados no banco
-			pgClient.query("UPDATE study_link SET name=($1), author=($2), pages_number=($3) WHERE id=($4)", [req.body.name, req.body.author, req.body.pages_number, id], (err, result) => {
+			pgClient.query("UPDATE study_link SET title=($1), link=($2), category=($3) WHERE id=($4)", [req.body.title, req.body.link, req.body.category, id], (err, result) => {
 				if(err) return console.log(err)
 				console.log('updated to database')
 				res.redirect('/list');

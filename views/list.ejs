@@ -26,7 +26,7 @@
 					<td><%= study_links[i].category %></td>
 					<td>
 						<a style="color: #009cdf" href="update?action=alt&id=<%= study_links[i].id %>">Atualizar</a>
-						<a style="color: #009cdf" href="delete?action=del&id=<%= study_links[i].id %>">Deletar</a>
+						<a style="color: #009cdf" href="delete?action=del&id=<%= study_links[i].id %>">Lido</a>
 					</td>
 				</tr> 
 				<% } %>
@@ -38,6 +38,8 @@
 
 	<p style="text-align:center">
 	<a href="http://localhost:3000/registry"><button>Cadastro de links</button></a></p>
+	<p style="text-align:center">
+	<a href="http://localhost:3000/search"><button>Busca de links</button></a></p>
 	<p style="text-align:center">
 	<a href="http://localhost:3000/"><button>Página inicial</button></a></p>
 </body>
