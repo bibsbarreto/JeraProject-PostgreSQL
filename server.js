@@ -46,6 +46,7 @@ app.set('view engine', 'ejs');
 //Lista de livros
 app.get('/list', (req, res) => {
 	   var study_links = [];
+	   var description = [];
 
 	   // Get a Postgres client from the connection pool
        pg.connect(conString, function(err, client, done) {
@@ -57,7 +58,7 @@ app.get('/list', (req, res) => {
         } 
         
         // SQL Query > Select Data
-        var query = pgClient.query('SELECT * FROM study_link ORDER BY id ASC;');
+        var query = pgClient.query('SELECT * FROM study_link ORDER BY id DESC;');
 
         // Stream results back one row at a time
         query.on('row', function(row) {
@@ -70,19 +71,22 @@ app.get('/list', (req, res) => {
 			
 			//Extraindo os metadados
 			for(var i = 0; i < study_links.length; i++){
-				var description = [];
 				urlMetadata(study_links[i].link).then(
 					function (metadata) {
+						console.log(metadata.description);
 						description.push(metadata.description);
 					},
 					function (error) {
-					  console.log(error)
+						console.log(error)
 					})
 			}
-			console.log(description);
-            res.render('list.ejs', {study_links: study_links, description: description});
+
+			function render(){
+            	res.render('list.ejs', {study_links: study_links, description: description});
+			}
+
+			setTimeout(render,3000);
         });
-		console.log(description);
 	});    
 })
 
@@ -225,7 +229,10 @@ app.get('/delete', (req, res) => {
         } 
         
         // SQL Query > Select Data
-        var query = pgClient.query('DELETE FROM study_link WHERE id=($1);', [id]);
+		var query = pgClient.query('DELETE FROM study_link WHERE id=($1);', [id]);
+		
+
+
         res.redirect('/list')
 	});
 })
