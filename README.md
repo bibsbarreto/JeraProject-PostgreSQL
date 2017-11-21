@@ -10,3 +10,8 @@ Busca de links: Uma tela para o usuário filtrar os links por título e categori
 Mostrar os metadados (nome e imagem) do link salvo (algo como facebook faz quando vc posta um link).
 
 ### String de banco de dados: postgres://someuser:somepassword@somehost:381/somedatabase
+
+### Passos:
+- Instalar dependências;
+- node database.js
+- npm start
