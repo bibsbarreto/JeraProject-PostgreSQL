@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Busca de links</title>
+	<title>Busca de links por título</title>
 	<style>
 		@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
 	</style> 
@@ -10,8 +10,12 @@
 <body>
 	<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Busca de links</h1>
 	
-    <input type="text" id="srt" name="category" placeholder="get value on option select"><br>
-    <button type="submit">Buscar</button>
+    <center>
+	<form   style="text-align:center" action="/search_for_title" method="POST">
+		<input type="text" id="srt" name="title" placeholder="Buscar"><br><br>
+		<button type="submit">Buscar</button>
+	</form>
+	</center>
 
 	<p style="text-align:center">
 	<a href="http://localhost:3000/list"><button>Lista de links</button></a></p>

@@ -5,6 +5,7 @@ var pg = require('pg');
 const app = express();
 var http = require('http');
 var url = require('url');
+const urlMetadata = require('url-metadata');
 
 //extrair dados do 'form'
 app.use(bodyParser.urlencoded({extended: true}))
@@ -60,22 +61,95 @@ app.get('/list', (req, res) => {
 
         // Stream results back one row at a time
         query.on('row', function(row) {
-            study_links.push(row);
-        });
+			study_links.push(row);
+		});
 
         // After all data is returned, close connection and return results
         query.on('end', function() {
 			done();
-            res.render('list.ejs', {study_links: study_links});
+			
+			//Extraindo os metadados
+			for(var i = 0; i < study_links.length; i++){
+				var description = [];
+				urlMetadata(study_links[i].link).then(
+					function (metadata) {
+						description.push(metadata.description);
+					},
+					function (error) {
+					  console.log(error)
+					})
+			}
+			console.log(description);
+            res.render('list.ejs', {study_links: study_links, description: description});
         });
-
+		console.log(description);
 	});    
 })
 
-//Lista de busca
-app.get('/search', (req, res) => {
-	var study_links = [];
-	res.render('search.ejs');
+//Página de busca por título
+app.get('/search_title', (req, res) => {
+	res.render('search_title.ejs');
+})
+
+//Busca por título
+app.post('/search_for_title', (req, res) => {
+	console.log('Entrou no método Post!')
+		var study_links = [];
+	   //Get a Postgres client from the connection pool
+       pg.connect(conString, function(err, client, done) {
+	       // Handle connection errors
+	       if(err) {
+	       	  done();
+	          console.log(err);
+	          return res.status(500).json({ success: false, data: err});
+	        }
+	        
+	        //colocar dados no banco
+			var query = pgClient.query("SELECT * FROM study_link WHERE title=($1);", [req.body.title]);
+			
+			query.on('row', function(row) {
+				study_links.push(row);
+			});
+		
+			// After all data is returned, close connection and return results
+			query.on('end', function() {
+				done(); 
+				res.render('search_results.ejs', {study_links: study_links});
+			});
+		})
+})
+
+//Página de busca por categoria
+app.get('/search_category', (req, res) => {
+	res.render('search_category.ejs');
+})
+
+//Busca por categoria
+app.post('/search_for_category', (req, res) => {
+	console.log('Entrou no método Post!')
+		var study_links = [];
+	   //Get a Postgres client from the connection pool
+       pg.connect(conString, function(err, client, done) {
+	       // Handle connection errors
+	       if(err) {
+	       	  done();
+	          console.log(err);
+	          return res.status(500).json({ success: false, data: err});
+	        }
+	        
+	        //colocar dados no banco
+			var query = pgClient.query("SELECT * FROM study_link WHERE category=($1);", [req.body.category]);
+			
+			query.on('row', function(row) {
+				study_links.push(row);
+			});
+		
+			// After all data is returned, close connection and return results
+			query.on('end', function() {
+				done(); 
+				res.render('search_results.ejs', {study_links: study_links});
+			});
+		})
 })
 
 var id = 0;
@@ -111,25 +185,26 @@ app.get('/update', (req, res) => {
 
 //Atualizar livro
 app.post('/update', (req, res) => {
-	console.log('Entrou no método Post!')
-
-	   //Get a Postgres client from the connection pool
-       pg.connect(conString, function(err, client, done) {
-	       // Handle connection errors
-	       if(err) {
-	       	  done();
-	          console.log(err);
-	          return res.status(500).json({ success: false, data: err});
-	        }
-	        
-	        //colocar dados no banco
-			pgClient.query("UPDATE study_link SET title=($1), link=($2), category=($3) WHERE id=($4)", [req.body.title, req.body.link, req.body.category, id], (err, result) => {
-				if(err) return console.log(err)
-				console.log('updated to database')
-				res.redirect('/list');
-			})	
-
-		})
+	console.log(req.body);
+	if(req.body.category != ""){
+		//Get a Postgres client from the connection pool
+		pg.connect(conString, function(err, client, done) {
+			// Handle connection errors
+			if(err) {
+				  done();
+			   console.log(err);
+			   return res.status(500).json({ success: false, data: err});
+			 }
+			 
+			 //colocar dados no banco
+			 pgClient.query("UPDATE study_link SET title=($1), link=($2), category=($3) WHERE id=($4)", [req.body.title, req.body.link, req.body.category, id], (err, result) => {
+				 if(err) return console.log(err)
+				 console.log('updated to database')
+				 res.redirect('/list');
+			 })	
+ 
+		 })
+	} else res.status(500).json("Selecione uma matéria válida!");
 })
 
 id = 0;

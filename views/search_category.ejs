@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Busca de links por categoria</title>
+	<style>
+		@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+	</style> 
+</head>
+<body>
+	<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Busca de links</h1>
+	
+    <center>
+	<form   style="text-align:center" action="/search_for_category" method="POST">
+		Categoria:<br>
+		<select id="Ultra" onchange="run()">
+			<option value="selected" selected>Selecione uma matéria</option>
+			<option value="Calculo">Cálculo I</option>
+			<option value="FTC">Fundamentos de Teoria da Computação</option>
+			<option value="AlgProg2">Algoritmos e Programação Orientada a Objetos II</option>
+        </select><br><br>
+        <input type="hidden" id="srt" name="category" placeholder="get value on option select"><br>
+		<button type="submit">Buscar</button>
+	</form>
+	</center>
+
+	<p style="text-align:center">
+	<a href="http://localhost:3000/list"><button>Lista de links</button></a></p>
+	<p style="text-align:center">
+    <a href="http://localhost:3000/"><button>Página inicial</button></a></p>
+    
+    <script>
+            function run() {
+            document.getElementById("srt").value = document.getElementById("Ultra").value;
+            }
+    
+            function up() {
+    
+                //if (document.getElementById("srt").value != "") {
+                    var dop = document.getElementById("srt").value;
+                //}
+                pop(dop);
+    
+            }
+    
+            function pop(val) {
+                alert(val);
+            }
+        </script>
+</body>
+</html>

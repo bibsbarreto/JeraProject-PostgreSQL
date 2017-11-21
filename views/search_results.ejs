@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Lista de links</title>
+	<title>Resultado da busca</title>
 	<style>
 		@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
-	</style>
+	</style> 
 </head>
 <body>
 	<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Lista de links</h1>
@@ -16,7 +16,6 @@
 				<th>Título</th>
 				<th>Link</th>
 				<th>Categoria</th>
-				<th>Descrição de metadados</th>
 				<th>Ações</th>
 			</thead>
 			<tbody class="study_link" style="background-color: #7a7a7a; color: white;">
@@ -25,7 +24,6 @@
 					<td><%= study_links[i].title %></td>
 					<td><%= study_links[i].link %></td>
 					<td><%= study_links[i].category %></td>
-					<td><%= description[i] %></td>
 					<td>
 						<a style="color: #009cdf" href="update?action=alt&id=<%= study_links[i].id %>">Atualizar</a>
 						<a style="color: #009cdf" href="delete?action=del&id=<%= study_links[i].id %>">Lido</a>
@@ -35,7 +33,7 @@
 			</tbody>
 	</table>
 	<%} else {%>
-			<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Não há links cadastrados!</h1>
+			<h1 style="text-align:center; color: #3E4B5E; font-family: 'Open Sans Condensed', sans-serif;">Nada encontrado!</h1>
 	<% } %>
 
 	<p style="text-align:center">
@@ -46,7 +44,5 @@
 	<a href="http://localhost:3000/search_category"><button>Busca por categoria</button></a></p>
 	<p style="text-align:center">
 	<a href="http://localhost:3000/"><button>Página inicial</button></a></p>
-
-	
 </body>
 </html>
